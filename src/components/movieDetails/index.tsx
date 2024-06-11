@@ -22,7 +22,7 @@ const styles = {
     },
 };
 
-const MovieDetails: React.FC<MovieDetailsProps> = (movie) => {
+const MovieDetails: React.FC<MovieDetailsProps> = (movie: MovieDetailsProps) => {
 
     return (
         <>
@@ -41,6 +41,17 @@ const MovieDetails: React.FC<MovieDetailsProps> = (movie) => {
                 {movie.genres.map((g) => (
                     <li key={g.name}>
                         <Chip label={g.name} />
+                    </li>
+                ))}
+            </Paper>
+            <Paper component="ul" sx={styles.chipSet}>
+                <li>
+                    <Chip label="Production Countries" sx={styles.chipLabel} color="primary" />
+                </li>
+
+                {movie.production_countries.map((c) => (
+                    <li key={c.name}>
+                        <Chip label={c.name} />
                     </li>
                 ))}
             </Paper>
