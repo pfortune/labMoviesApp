@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -24,7 +25,6 @@ const styles = {
 
 const MovieCard: React.FC<BaseMovieProps> = (movie) => {
  
-
   return (
     <Card sx={styles.card}>
       <CardHeader title={movie.title} />
@@ -56,9 +56,11 @@ const MovieCard: React.FC<BaseMovieProps> = (movie) => {
         <IconButton aria-label="add to favorites" >
           <FavoriteIcon color="primary" fontSize="large" />
         </IconButton>
-        <Button variant="outlined" size="medium" color="primary">
-          More Info ...
-        </Button>
+        <Link to={`/movies/${movie.id}`}>
+          <Button variant="outlined" size="medium" color="primary">
+            More Info ...
+          </Button>
+        </Link>
       </CardActions>
     </Card>
   );
