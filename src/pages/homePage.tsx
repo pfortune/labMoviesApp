@@ -8,11 +8,14 @@ const HomePage: React.FC = () => {
   const favourites = movies.filter(m => m.favourite)
   
   const addToFavourites = (movieId: number) => {
+    
     const updatedMovies = movies.map((m: BaseMovieProps) =>
-      m.id === movieId ? { ...m, favourite: true } : m
+      m.id === movieId ? { ...m, favourite: !m.favourite } : m
     );
     setMovies(updatedMovies);
-    localStorage.setItem('favourites', JSON.stringify(favourites))
+
+    const updatedFavourites = updatedMovies.filter(m => m.favourite);
+    localStorage.setItem('favourites', JSON.stringify(updatedFavourites));
   };
 
   useEffect(() => {
