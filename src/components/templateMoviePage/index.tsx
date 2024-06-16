@@ -23,7 +23,6 @@ interface TemplateMoviePageProps {
     children: React.ReactElement;
 }
 
-
 const TemplateMoviePage: React.FC<TemplateMoviePageProps> = ({movie, children}) => {
     const [images, setImages] = useState([]);
 

@@ -50,6 +50,7 @@ export interface BaseMovieProps {
   }
 
   export interface Review {
+    id: string;
     author: string;
     content: string;
     agree: boolean;
