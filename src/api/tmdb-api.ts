@@ -7,7 +7,7 @@ export const getMovies = () => {
     return response.json();
   })
     .catch((error) => {
-      throw error
+      throw error;
     });
 };
 
@@ -21,7 +21,7 @@ export const getMovie = (id: string) => {
     return response.json();
   })
   .catch((error) => {
-    throw error
+    throw error;
  });
 };
 
@@ -34,7 +34,7 @@ export const getGenres = () => {
     return response.json();
   })
   .catch((error) => {
-    throw error
+    throw error;
  });
 };
 
@@ -43,22 +43,26 @@ export const getMovieImages = (id: string | number) => {
     `https://api.themoviedb.org/3/movie/${id}/images?api_key=${import.meta.env.VITE_TMDB_KEY}`
   ).then((response) => {
     if (!response.ok) {
-      throw new Error("failed to fetch images");
+      throw new Error("Failed to fetch images.");
     }
     return response.json();
   }).then((json) => json.posters)
     .catch((error) => {
-      throw error
+      throw error;
     });
 };
 
-export const getMovieReviews = (id: string | number) => { //movie id can be string or number
+export const getMovieReviews = (id: string | number) => {
   return fetch(
     `https://api.themoviedb.org/3/movie/${id}/reviews?api_key=${import.meta.env.VITE_TMDB_KEY}`
-  )
-    .then((res) => res.json())
-    .then((json) => {
-      return json.results;
+  ).then((response) => {
+    if (!response.ok) {
+      throw new Error(`Failed to fetch reviews. Response status: ${response.status}`);
+    }
+    return response.json();
+  }).then((json) => json.results)
+    .catch((error) => {
+      throw error;
     });
 };
 
@@ -67,5 +71,4 @@ export const getUpcomingMovies = () => {
     `https://api.themoviedb.org/3/movie/upcoming?api_key=${import.meta.env.VITE_TMDB_KEY}&language=en-US&include_adult=false&page=1`
   )
     .then(res => res.json())
-    .then(json => json.results);
 };
