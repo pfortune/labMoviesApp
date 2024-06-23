@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import PageTemplate from '../components/templateMovieListPage';
 import { BaseMovieProps } from "../types/interfaces";
 import { getUpcomingMovies } from "../api/tmdb-api";
@@ -24,39 +24,47 @@ const genreFiltering = {
 };
 
 const UpcomingMoviesPage: React.FC = () => {
-  const { data, error, isLoading, isError } = useQuery<DiscoverMovies, Error>('upcoming',getUpcomingMovies);
+  const { data, error, isLoading, isError } = useQuery<DiscoverMovies, Error>(
+    'upcoming',
+    getUpcomingMovies,
+    {
+      staleTime: 1000 * 60 * 5, // 5 minutes
+      cacheTime: 1000 * 60 * 30, // 30 minutes
+      refetchOnWindowFocus: false,
+    }
+  );
+  
   const { filterValues, setFilterValues, filterFunction } = useFiltering(
     [titleFiltering, genreFiltering]
   );
 
+  const changeFilterValues = (type: string, value: string) => {
+    const changedFilter = { name: type, value: value };
+    const updatedFilterSet =
+      type === 'title'
+        ? [changedFilter, filterValues[1]]
+        : [filterValues[0], changedFilter];
+    setFilterValues(updatedFilterSet);
+  };
+
+  const movies = data ? data.results : [];
+
+  const displayedMovies = useMemo(() => filterFunction(movies), [movies, filterFunction]);
+
   if (isLoading) {
-		return <Spinner />;
-	}
+    return <Spinner />;
+  }
 
-	if (isError) {
-		return <h1>{error.message}</h1>;
-	}
-
-	const changeFilterValues = (type: string, value: string) => {
-		const changedFilter = { name: type, value: value };
-		const updatedFilterSet =
-			type === 'title'
-				? [changedFilter, filterValues[1]]
-				: [filterValues[0], changedFilter];
-		setFilterValues(updatedFilterSet);
-	};
-
-	const movies = data ? data.results : [];
-  const displayedMovies = filterFunction(movies);
+  if (isError) {
+    return <h1>Error: {error.message}</h1>;
+  }
 
   return (
     <>
       <PageTemplate
         title='Upcoming Movies'
         movies={displayedMovies}
-        action={(movie: BaseMovieProps) => {
-          return <AddToPlaylistIcon {...movie}/>
-          }}
+        action={(movie: BaseMovieProps) => <AddToPlaylistIcon {...movie} />}
       />
       <MovieFilterUI
         onFilterValuesChange={changeFilterValues}
@@ -66,4 +74,5 @@ const UpcomingMoviesPage: React.FC = () => {
     </>
   );
 };
-export default UpcomingMoviesPage;
+
+export default React.memo(UpcomingMoviesPage);
